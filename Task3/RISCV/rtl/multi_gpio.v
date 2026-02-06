@@ -1,4 +1,4 @@
-module multi_gpio_ip (
+module multi_gpio (
     input              clk,
     input              rst_n,
     input              bus_valid,
