@@ -227,6 +227,4 @@ This is a **standard RTL verification workflow** used in FPGA and ASIC design.
 **Srihari Naidu**  
 RTL / FPGA / SoC Design  
 
----
 
-✨ Clean • Structured • Industry-Aligned • GitHub-Ready ✨
