@@ -208,11 +208,7 @@ gtkwave final_vsd_timer.vcd
 - Timer reloads automatically
 - Generates repeated events
 
----
-<p align="center">
-Complete flow for Simulation, Synthesis, Place & Route, and Bitstream Preparation
-</p>
----
+
 
 # 🧬 FPGA SYNTHESIS FLOW
 
