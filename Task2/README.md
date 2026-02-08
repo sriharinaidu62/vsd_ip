@@ -1,125 +1,232 @@
-# 🚀 RTL Simulation Command Flow – GPIO IP
+# 🚀 Simple GPIO Output IP – RTL Design, Integration & Simulation
 
-This README presents a clear and beginner-friendly walkthrough of the
-terminal commands used to **compile, simulate, and visualize** the GPIO IP
-RTL design using **Icarus Verilog** and **GTKWave**.
+This repository contains the implementation of a **Simple GPIO Output IP**
+designed as part of a structured SoC/IP development task.  
+The IP is intentionally simple to introduce **core IP concepts** and mirrors
+the **first peripheral IP most engineers build in industry**.
 
 ---
 
-## 📂 Step 1: Navigate to RTL Directory
+## 📌 IP Overview
+
+**IP Name:** Simple GPIO Output IP (Write-Only with Readback)  
+
+### Why this IP?
+- Conceptually simple and beginner-friendly
+- Introduces memory-mapped IP design
+- Demonstrates register write, readback, and output logic
+- Closely resembles real-world industry starter IPs
+
+---
+
+## ⚙️ Functionality
+
+- One **32-bit register**
+- Writing updates a GPIO output signal
+- Reading returns the last written value
+
+---
+
+## 🔌 Interface Description
+
+| Signal     | Direction | Description |
+|-----------|----------|-------------|
+| `clk`     | Input    | System clock |
+| `resetn`  | Input    | Active-low reset |
+| `we`      | Input    | Write enable |
+| `re`      | Input    | Read enable |
+| `wdata`   | Input    | Write data bus |
+| `rdata`   | Output   | Read data bus |
+| `gpio_out`| Output   | GPIO output pins |
+
+---
+
+## 🧠 Address Map
+
+- **Base Address:** Assigned by SoC (e.g. `0x2000_0000`)
+- **Offset `0x00`:** GPIO output register
+
+---
+
+## 🧩 GPIO IP RTL
+
+The IP consists of:
+- A 32-bit register for storage
+- Synchronous write logic
+- Readback logic
+- Continuous GPIO output assignment
+
+The design follows **correct synchronous RTL practices** with clarity and
+correctness prioritized over optimization.
+
+---
+
+## 🧪 Task Breakdown
+
+### ✅ Step 1: Understand the Existing SoC (Mandatory)
+- Identify memory-mapped peripheral decoding
+- Understand CPU read/write mechanism
+- Study existing peripherals (LED / UART)
+- No coding — understanding only
+
+---
+
+### ✅ Step 2: Write the IP RTL (Mandatory)
+- Create GPIO IP RTL module
+- Implement:
+  - Register storage
+  - Write logic
+  - Readback logic
+- Follow synchronous design principles
+- Correctness first, no optimization
+
+---
+
+### ✅ Step 3: Integrate the IP into the SoC (Mandatory)
+- Instantiate GPIO IP in SoC top module
+- Add address decoding
+- Connect CPU bus signals
+- Expose GPIO output internally or externally
+
+---
+
+### ✅ Step 4: Validate Using Simulation (Mandatory)
+- Write or reuse a C program that:
+  - Writes values to GPIO register
+  - Reads back values
+  - Prints results via UART
+- Run simulation
+- Verify:
+  - Correct register update
+  - Correct readback behavior
+- **Simulation proof is mandatory**
+
+---
+
+### 🟡 Step 5: Hardware Validation (Optional)
+- Synthesize the design
+- Program FPGA board
+- Connect GPIO output to:
+  - LEDs (preferred), or
+  - Observe via UART output
+- Optional, no grading advantage
+
+---
+
+## 🖥️ RTL Simulation Command Flow
+
+The following commands were used to compile, simulate, and analyze the GPIO IP.
+
+---
+
+### 📂 Navigate to RTL Directory
 
 🔹 **Command:**  
 **`cd ~/Desktop/vsd_ip/Task2/RISCV/rtl`**
 
-Explanation:  
-Moves into the RTL working directory that contains the Verilog source files
-and testbench. All simulation commands are executed from this location.
+Moves into the directory containing the RTL and testbench files.
 
 ---
 
-## 📝 Step 2: Create Testbench File
+### 📝 Create Testbench File
 
 🔹 **Command:**  
 **`touch tb_gpio.v`**
 
-Explanation:  
-Creates an empty Verilog testbench file named `tb_gpio.v`, which is used to
-verify the functionality of the GPIO IP.
-<img width="1920" height="165" alt="task2_1" src="https://github.com/user-attachments/assets/999e2cb1-0e06-4a51-a48d-657e98434794" />
+Creates an empty Verilog testbench file.
+<img width="1920" height="165" alt="task2_1" src="https://github.com/user-attachments/assets/76dd6423-3396-4433-8725-7d288abebf71" />
 
 ---
 
-## 📋 Step 3: Verify Files
+### 📋 Verify Files
 
 🔹 **Command:**  
 **`ls`**
 
-Explanation:  
-Lists all files in the current directory to confirm the presence of RTL and
-testbench files before editing or compilation.
+Lists all files to confirm RTL and testbench presence.
 
 ---
 
-## ✏️ Step 4: Edit Testbench
+### ✏️ Edit Testbench
 
 🔹 **Command:**  
 **`nano tb_gpio.v`**
 
-Explanation:  
-Opens the testbench file in the Nano text editor to write or modify Verilog
-testbench code such as clock generation, reset logic, and stimulus.
-<img width="1920" height="895" alt="task2_2" src="https://github.com/user-attachments/assets/c246e45f-6233-4c27-b3e4-67793ec8a7a1" />
+Opens the testbench file to write stimulus, clock, reset, and dump logic.
+<img width="1920" height="895" alt="task2_2" src="https://github.com/user-attachments/assets/5fd7cf61-b126-46db-be04-af44c3d81128" />
 
 ---
 
-## 🔍 Step 5: Recheck Directory
-
-🔹 **Command:**  
-**`ls`**
-
-Explanation:  
-Lists files again to confirm that the testbench file exists after editing.
-
----
-
-## 🧹 Step 6: Clean Old Waveforms
+### 🧹 Clean Old Waveforms
 
 🔹 **Command:**  
 **`rm -f sim_gpio_ip.vcd`**
 
-Explanation:  
-Deletes any previously generated waveform file to ensure a clean and fresh
-simulation output.
-<img width="1920" height="340" alt="task2_3" src="https://github.com/user-attachments/assets/a8377c67-b7a7-40fa-8840-8baa341b328e" />
+Removes old waveform files to ensure a clean simulation run.
+<img width="1920" height="340" alt="task2_3" src="https://github.com/user-attachments/assets/13342f2b-b9de-408c-9752-9e0834cd53fa" />
 
 ---
 
-## ⚙️ Step 7: Compile RTL and Testbench
+### ⚙️ Compile RTL and Testbench
 
 🔹 **Command:**  
 **`iverilog -g2012 -Wall -o sim gpio_ip.v tb_gpio.v`**
 
-Explanation:  
-Compiles the GPIO IP RTL and its testbench into a simulation executable.
+Compiles the GPIO IP and testbench into a simulation executable.
 
-Options Breakdown:  
-`-g2012` → Enables Verilog-2012 features  
-`-Wall`  → Enables all compiler warnings  
-`-o sim` → Names the output executable as `sim`
+- `-g2012` → Enables Verilog-2012
+- `-Wall` → Enables all warnings
+- `-o sim` → Output executable name
 
 ---
 
-## ▶️ Step 8: Run Simulation
+### ▶️ Run Simulation
 
 🔹 **Command:**  
 **`vvp sim`**
 
-Explanation:  
-Executes the compiled simulation, applies testbench stimulus, prints
-verification messages, and generates a VCD waveform file.
-<img width="1905" height="226" alt="task2_4" src="https://github.com/user-attachments/assets/3beeb330-5142-407c-9d97-38483300d189" />
+Runs the simulation, executes testbench stimulus, and generates VCD waveforms.
+<img width="1905" height="226" alt="task2_4" src="https://github.com/user-attachments/assets/128a9f19-2196-42f6-a210-baacba7269bb" />
+
 
 ---
 
-## 📈 Step 9: View Waveforms
+### 📈 View Waveforms
 
 🔹 **Command:**  
 **`gtkwave gpio_ip.vcd`**
 
-Explanation:  
-Opens the generated waveform file in GTKWave to visually inspect signal
-behavior such as clock, reset, bus transactions, and GPIO outputs.
-<img width="1920" height="891" alt="task2_7" src="https://github.com/user-attachments/assets/6ead63b1-f738-43df-97d2-512ce5b0b649" />
+Opens the waveform file in GTKWave for signal-level debugging.
+<img width="1920" height="891" alt="task2_7" src="https://github.com/user-attachments/assets/78c053e7-3a2d-470a-ac53-7ed5a4f46417" />
 
 ---
 
-## 🔁 Workflow Summary
+## 🔁 Simulation Flow Summary
 
-**cd → touch → nano → iverilog → vvp → gtkwave**
+**Navigate → Create TB → Edit → Compile → Simulate → View Waveforms**
 
-This command flow represents a **standard RTL verification workflow**
-used in FPGA and VLSI development.
+This is a **standard RTL verification workflow** used in FPGA and ASIC design.
+<img width="1920" height="892" alt="task2_command_flow" src="https://github.com/user-attachments/assets/5617079d-6c68-49bf-b4aa-fa17ad5389b1" />
 
 ---
 
-✨ Clean • Highlighted • GitHub-Ready • Reviewer-Friendly ✨
+## 📦 Submission Requirements
+
+- GPIO IP RTL file
+- SoC integration description or diff
+- Simulation log or waveform screenshot
+- Short explanation covering:
+  - Address used
+  - CPU access method
+  - What was validated in simulation
+
+---
+
+## 👤 Author
+
+**Srihari Naidu**  
+RTL / FPGA / SoC Design  
+
+---
+
+✨ Clean • Structured • Industry-Aligned • GitHub-Ready ✨
