@@ -7,11 +7,6 @@ Rather than relying on software-based delays, this Timer IP provides a **dedicat
 
 ---
 
-## 🧱 Block Diagram & Architecture
-
-The Timer IP is implemented as a **memory-mapped peripheral** within the RISC-V SoC.
-
-
 ### Architectural Description
 
 - The RISC-V processor accesses the Timer IP using standard **load/store memory transactions**.
@@ -29,76 +24,70 @@ This architecture mirrors real-world SoC peripheral integration practices.
 
 ---
 
-## 🎯 Purpose of the Timer IP
+## ⏱️ Design Intent and Role in the SoC
 
-The Timer IP exists to provide a **reliable and deterministic time base** that software alone cannot guarantee.
+The Timer IP serves as a dedicated hardware timekeeping block that ensures precise and repeatable timing behavior within the system, independent of software execution flow.
 
-Key objectives include:
+Its primary responsibilities include:
 
-- Deterministic time reference independent of CPU execution
-- Hardware-enforced timing boundaries
-- Accurate periodic event generation
-- Timekeeping during low-power or idle states
-- Offloading timing responsibility from software to hardware
+- Providing a stable hardware-based timing reference
+- Enforcing time limits that are not affected by CPU load or instruction latency
+- Generating consistent timing events for system-level coordination
+- Maintaining accurate time tracking during idle or low-power operation
+- Reducing software complexity by moving timing functions into hardware
+
 
 ---
 
 ## 🧠 Typical Use Cases
 
-This Timer IP is suitable for a wide range of embedded and SoC applications:
+This Timer IP is designed to support a broad range of timing-critical functions in embedded and SoC-based systems, including:
 
-- Peripheral communication timeout detection
-- Operating system scheduler tick generation
-- Periodic sampling in control systems
-- Safety monitoring and supervision logic
-- Non-blocking delays and execution pacing
+- Detecting and enforcing communication timeouts for on-chip and external peripherals  
+- Generating system ticks for real-time operating systems and cooperative schedulers  
+- Driving periodic tasks such as sensor sampling, control loop execution, and data acquisition  
+- Implementing safety supervision, fault detection, and watchdog-style monitoring logic  
+- Enabling non-blocking delays and precise execution pacing without stalling the processor
+
 
 ---
 
 ## ❓ Why Use a Hardware Timer?
 
-Using a dedicated hardware timer offers significant advantages over software-based timing mechanisms:
+A dedicated hardware timer delivers robust and deterministic timing behavior that software-based approaches cannot reliably guarantee:
 
-- Predictable timing unaffected by instruction latency or software jitter
-- Prevention of deadlocks and uncontrolled execution paths
-- Elimination of fragile delay loops and ad-hoc timing logic
-- Enables low-power, sleep-based system designs
-- Provides a reusable and standardized timing primitive across projects
+- Ensures precise and repeatable timing independent of CPU instruction flow or execution jitter  
+- Protects the system from deadlocks and runaway execution in fault or edge-case scenarios  
+- Removes the need for unreliable software delay loops and custom timing workarounds  
+- Supports power-efficient designs by enabling sleep and idle modes instead of active polling  
+- Acts as a reusable, standardized timing building block across multiple SoC designs and projects
 
----
-
-## ⚙️ Feature Summary
-
-### Supported Operating Modes
-
-The Timer IP supports multiple modes to address diverse timing requirements in SoC designs.
-
-#### One-Shot Mode
-- The timer counts down from a programmed load value to zero.
-- A timeout event is generated once.
-- The timer stops after reaching zero.
-
-#### Periodic (Auto-Reload) Mode
-- Upon reaching zero, the timer automatically reloads the programmed load value.
-- Continuous timeout events are generated at fixed intervals.
-
-#### Prescaled Operation
-- Both one-shot and periodic modes can optionally operate using a programmable prescaler.
-- Enables longer timing intervals without increasing counter width.
 
 ---
 
-## ⚠️ Known Limitations
+## 🚀 Functional Capabilities
 
-This implementation intentionally remains minimal and focused:
+### Timer Operating Configurations
 
-- Single timer instance
-- No interrupt controller integration
-- No capture/compare functionality
-- Fully software-controlled (polling-based)
+The Timer IP provides flexible operating configurations designed to support both simple and repetitive timing functions within a RISC-V–based SoC.
 
-These constraints keep the IP simple, transparent, and ideal for educational and integration-focused SoC designs.
+#### Single-Shot Countdown Mode
+- Initiates a countdown from a software-defined start value.
+- Asserts a timeout indication once the count reaches zero.
+- Halts further counting after expiration, making it ideal for fixed delays and watchdog-style checks.
+
+#### Continuous Periodic Mode
+- Automatically reloads the preset count value after reaching zero.
+- Generates recurring timeout events at consistent, programmable intervals.
+- Suitable for periodic tasks such as scheduler ticks or sampling loops.
+
+#### Programmable Prescaler Support
+- Optional clock prescaling is available in both operating modes.
+- Allows generation of long delay intervals without requiring a wider counter.
+- Helps balance timing resolution and power efficiency.
 
 ---
+
+
 
 
