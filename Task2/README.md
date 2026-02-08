@@ -15,6 +15,8 @@ Explanation:
 Moves into the RTL working directory that contains the Verilog source files
 and testbench. All simulation commands are executed from this location.
 
+<img width="1920" height="165" alt="task2_1" src="https://github.com/user-attachments/assets/1bcbf40a-13a6-49db-b17d-161d87c3ee3a" />
+
 ---
 
 ## 📝 Step 2: Create Testbench File
