@@ -209,15 +209,190 @@ gtkwave final_vsd_timer.vcd
 - Generates repeated events
 
 ---
+<p align="center">
+Complete flow for Simulation, Synthesis, Place & Route, and Bitstream Preparation
+</p>
+---
 
-# 🛠 Tools Used
-
-- Icarus Verilog
-- VVP Runtime
-- GTKWave
-- Nano Editor
+# 🧬 FPGA SYNTHESIS FLOW
 
 ---
+
+# 📍 Step 1 – Edit FPGA Top Module (If Required)
+
+```bash
+nano top_timer_fpga.v
+```
+
+### 🔎 Explanation
+Allows modification of:
+- FPGA wrapper module  
+- Clock & Reset connections  
+- LED or IO mapping  
+
+---
+
+# 📍 Step 2 – Edit Pin Constraint File
+
+```bash
+nano vsd_squadron.pcf
+```
+
+### 🔎 Explanation
+Defines FPGA pin mappings such as:
+- Clock input  
+- Reset input  
+- LED outputs  
+- External IO signals  
+
+---
+
+# 📍 Step 3 – RTL Synthesis Using Yosys
+
+```bash
+yosys -p "
+read_verilog final_vsd_timer.v top_timer_fpga.v
+synth_ice40 -top top_timer_fpga -json timer.json
+"
+```
+
+### 🔎 Explanation
+
+| Command | Purpose |
+|------------|-------------|
+| `read_verilog` | Loads RTL & Top Module |
+| `synth_ice40` | Synthesizes design for ICE40 FPGA |
+| `-top` | Specifies top module |
+| `-json timer.json` | Generates synthesized netlist |
+
+### 📁 Output
+```
+timer.json
+```
+
+---
+
+# 📍 Step 4 – Place & Route Using NextPNR
+
+```bash
+nextpnr-ice40 \
+--up5k \
+--package sg48 \
+--json timer.json \
+--pcf vsd_squadron.pcf \
+--asc timer.asc
+```
+
+### 🔎 Explanation
+
+| Option | Purpose |
+|------------|-------------|
+| `nextpnr-ice40` | Place & Route Tool |
+| `--up5k` | Targets ICE40 UP5K FPGA |
+| `--package sg48` | Specifies FPGA Package |
+| `--json timer.json` | Input Netlist |
+| `--pcf vsd_squadron.pcf` | Pin Constraints |
+| `--asc timer.asc` | Generates FPGA configuration file |
+
+### 📁 Output
+```
+timer.asc
+```
+
+---
+
+# 📍 Step 5 – Generate Bitstream
+
+```bash
+icepack timer.asc timer.bin
+```
+
+### 🔎 Explanation
+Converts ASCII configuration file into binary bitstream used for FPGA programming.
+
+### 📁 Output
+```
+timer.bin
+```
+
+---
+
+# 📍 Step 6 – Program FPGA
+
+```bash
+iceprog timer.bin
+```
+
+### 🔎 Explanation
+Uploads generated bitstream to FPGA hardware.
+
+---
+
+# 🧪 Functional Verification
+
+## ⏱ One-Shot Mode
+- Timer runs once  
+- Stops after timeout  
+
+## 🔁 Periodic Mode
+- Timer reloads automatically  
+- Generates continuous timing signals  
+
+---
+
+# 📁 Generated Files
+
+| File | Description |
+|----------|----------------|
+| `sim` | Simulation Executable |
+| `final_vsd_timer.vcd` | Waveform Output |
+| `timer.json` | Synthesized Netlist |
+| `timer.asc` | FPGA Configuration File |
+| `timer.bin` | FPGA Bitstream |
+
+---
+
+# ⚡ Complete Flow (Quick Run)
+
+```bash
+cd ~/Desktop/vsd_ip/final_Task/timer_ip/rtl
+
+rm -f sim final_vsd_timer.vcd
+
+iverilog -g2012 -Wall -o sim final_vsd_timer.v tb_vsd_timer_ip.v
+vvp sim
+gtkwave final_vsd_timer.vcd
+
+yosys -p "
+read_verilog final_vsd_timer.v top_timer_fpga.v
+synth_ice40 -top top_timer_fpga -json timer.json
+"
+
+nextpnr-ice40 \
+--up5k \
+--package sg48 \
+--json timer.json \
+--pcf vsd_squadron.pcf \
+--asc timer.asc
+
+icepack timer.asc timer.bin
+iceprog timer.bin
+```
+
+---
+
+# ✅ Status
+
+```
+Simulation & FPGA Build Completed Successfully
+```
+
+---
+
+# 👨‍💻 Author
+
+**Menda Srihari Naidu**
+
 
 
 
