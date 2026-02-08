@@ -102,6 +102,7 @@ Navigate to the directory containing:
 Create a dedicated testbench for Timer IP validation.
 
 **`touch tb_timer_ip.v`**
+<img width="1365" height="119" alt="task4_1" src="https://github.com/user-attachments/assets/c47a1331-267e-4dcf-9826-7e3392ea6375" />
 
 Open the file to implement:
 - Clock and reset generation
@@ -113,6 +114,7 @@ Open the file to implement:
 - Waveform dumping
 
 **`nano tb_timer_ip.v`**
+<img width="1920" height="889" alt="task4_2" src="https://github.com/user-attachments/assets/69791ff2-d840-4cc3-a5bd-6b9f4d5ff0f5" />
 
 Verify all required files before simulation.
 
@@ -125,6 +127,7 @@ Verify all required files before simulation.
 Remove old simulation binaries and waveforms.
 
 **`rm -f sim timer_ip.vcd`**
+<img width="1920" height="340" alt="task4_3" src="https://github.com/user-attachments/assets/a2cc1b25-b322-45c6-bc8a-58f1683776a2" />
 
 ---
 
@@ -157,5 +160,59 @@ During simulation, the testbench validates:
 - Write-1-to-clear behavior
 
 Expected console output includes:
+<img width="1920" height="603" alt="task4_4" src="https://github.com/user-attachments/assets/b1a2dabb-a1fe-470f-8bc4-7cfc5c7842dd" />
 
+
+This confirms:
+- Countdown reaches zero correctly
+- TIMEOUT asserts as expected
+- VALUE reloads in periodic mode
+- Disable logic works correctly
+<img width="1920" height="889" alt="task4_5" src="https://github.com/user-attachments/assets/ba9dac36-099a-4065-ae0e-494b1fd942fc" />
+
+---
+
+### 📈 Step 6: Waveform Inspection
+
+Open the waveform dump to visually inspect internal behavior.
+
+**`gtkwave timer_ip.vcd`**
+<img width="1920" height="889" alt="task4_waveform1" src="https://github.com/user-attachments/assets/a0f890ab-b014-4040-a594-6b707c2e7bf8" />
+
+Waveforms confirm:
+- CTRL decoding
+- LOAD and VALUE behavior
+- Timeout assertion timing
+- STATUS clear operation
+- Prescaler influence (if enabled)
+<img width="1920" height="891" alt="task4_waveform2" src="https://github.com/user-attachments/assets/d7be80a8-3e43-4199-be6e-0c71df3235bb" />
+
+---
+
+## ✅ Validation Summary
+
+✔ Timer counts down correctly  
+✔ One-shot and periodic modes verified  
+✔ STATUS timeout flag behaves correctly  
+✔ VALUE register reflects real countdown  
+✔ IP integrates cleanly with the SoC bus  
+
+This confirms the Timer IP is **functionally correct and SoC-ready**.
+
+---
+
+## 🧰 Tools Used
+
+- Icarus Verilog  
+- GTKWave  
+- Ubuntu Linux  
+- RISC-V GCC Toolchain  
+
+---
+
+## 👤 Author
+
+**Srihari Naidu**  
+VSD SoC Design Program  
+**Task-4: Minimal SoC Timer IP**
 
