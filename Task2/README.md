@@ -15,8 +15,6 @@ Explanation:
 Moves into the RTL working directory that contains the Verilog source files
 and testbench. All simulation commands are executed from this location.
 
-<img width="1920" height="165" alt="task2_1" src="https://github.com/user-attachments/assets/1bcbf40a-13a6-49db-b17d-161d87c3ee3a" />
-
 ---
 
 ## 📝 Step 2: Create Testbench File
@@ -27,6 +25,7 @@ and testbench. All simulation commands are executed from this location.
 Explanation:  
 Creates an empty Verilog testbench file named `tb_gpio.v`, which is used to
 verify the functionality of the GPIO IP.
+<img width="1920" height="165" alt="task2_1" src="https://github.com/user-attachments/assets/999e2cb1-0e06-4a51-a48d-657e98434794" />
 
 ---
 
@@ -49,6 +48,7 @@ testbench files before editing or compilation.
 Explanation:  
 Opens the testbench file in the Nano text editor to write or modify Verilog
 testbench code such as clock generation, reset logic, and stimulus.
+<img width="1920" height="895" alt="task2_2" src="https://github.com/user-attachments/assets/c246e45f-6233-4c27-b3e4-67793ec8a7a1" />
 
 ---
 
@@ -70,6 +70,7 @@ Lists files again to confirm that the testbench file exists after editing.
 Explanation:  
 Deletes any previously generated waveform file to ensure a clean and fresh
 simulation output.
+<img width="1920" height="340" alt="task2_3" src="https://github.com/user-attachments/assets/a8377c67-b7a7-40fa-8840-8baa341b328e" />
 
 ---
 
@@ -96,6 +97,7 @@ Options Breakdown:
 Explanation:  
 Executes the compiled simulation, applies testbench stimulus, prints
 verification messages, and generates a VCD waveform file.
+<img width="1905" height="226" alt="task2_4" src="https://github.com/user-attachments/assets/3beeb330-5142-407c-9d97-38483300d189" />
 
 ---
 
@@ -107,6 +109,7 @@ verification messages, and generates a VCD waveform file.
 Explanation:  
 Opens the generated waveform file in GTKWave to visually inspect signal
 behavior such as clock, reset, bus transactions, and GPIO outputs.
+<img width="1920" height="891" alt="task2_7" src="https://github.com/user-attachments/assets/6ead63b1-f738-43df-97d2-512ce5b0b649" />
 
 ---
 
