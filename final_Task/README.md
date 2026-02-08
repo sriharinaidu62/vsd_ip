@@ -87,6 +87,138 @@ The Timer IP provides flexible operating configurations designed to support both
 - Helps balance timing resolution and power efficiency.
 
 ---
+# 🕒 VSD Timer IP – Simulation Guide
+
+This document explains how to compile, simulate, and view waveform results for the **VSD Timer IP** using **Icarus Verilog** and **GTKWave**.
+
+---
+
+## 📂 Navigate to RTL Directory
+
+Move to the directory containing the Timer IP RTL and testbench files.
+
+```bash
+cd ~/Desktop/vsd_ip/final_Task/timer_ip/rtl
+```
+
+### 🔎 Explanation
+- Changes the working directory to the Timer IP RTL folder
+- Contains design and testbench files
+
+---
+
+## 📄 Create Testbench File (If Not Present)
+
+```bash
+touch tb_vsd_timer_ip.v
+```
+
+### 🔎 Explanation
+- Creates empty testbench file
+- Used for simulation verification
+
+---
+
+## ✏️ Edit Testbench File
+
+```bash
+nano tb_vsd_timer_ip.v
+```
+
+### 🔎 Explanation
+- Opens testbench file using Nano editor
+- Allows writing or editing simulation logic
+
+---
+
+## 📋 List Files
+
+```bash
+ls
+```
+
+### 🔎 Explanation
+Shows available files such as:
+- `final_vsd_timer.v`
+- `tb_vsd_timer_ip.v`
+
+---
+
+## 🧹 Remove Old Simulation Files
+
+```bash
+rm -f sim final_vsd_timer.vcd
+```
+
+### 🔎 Explanation
+- Deletes previous simulation executable
+- Removes old waveform dump file
+
+---
+
+## ⚙️ Compile Design and Testbench
+
+```bash
+iverilog -g2012 -Wall -o sim final_vsd_timer.v tb_vsd_timer_ip.v
+```
+
+### 🔎 Explanation
+- `iverilog` → Verilog compiler
+- `-g2012` → Enables SystemVerilog 2012 features
+- `-Wall` → Shows warnings
+- `-o sim` → Creates simulation executable named `sim`
+
+---
+
+## ▶️ Run Simulation
+
+```bash
+vvp sim
+```
+
+### 🔎 Explanation
+- Runs compiled simulation
+- Generates waveform file:
+```
+final_vsd_timer.vcd
+```
+- Displays one-shot and periodic timer results
+
+---
+
+## 📊 Open Waveform Viewer
+
+```bash
+gtkwave final_vsd_timer.vcd
+```
+
+### 🔎 Explanation
+- Opens waveform viewer
+- Used to analyze signal transitions and timer behavior
+
+---
+
+# 🧪 Simulation Output
+
+## ✅ One-Shot Mode
+- Timer runs once
+- Stops after completion
+
+## 🔁 Periodic Mode
+- Timer reloads automatically
+- Generates repeated events
+
+---
+
+# 🛠 Tools Used
+
+- Icarus Verilog
+- VVP Runtime
+- GTKWave
+- Nano Editor
+
+---
+
 
 
 
