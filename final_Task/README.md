@@ -112,6 +112,7 @@ cd ~/Desktop/vsd_ip/final_Task/timer_ip/rtl
 ```bash
 touch tb_vsd_timer_ip.v
 ```
+<img width="1155" height="115" alt="timer1" src="https://github.com/user-attachments/assets/8971c9cb-dda3-417b-83a5-e1bbf04f8e12" />
 
 ### 🔎 Explanation
 - Creates empty testbench file
@@ -124,6 +125,7 @@ touch tb_vsd_timer_ip.v
 ```bash
 nano tb_vsd_timer_ip.v
 ```
+<img width="1920" height="895" alt="timer_tb_proof" src="https://github.com/user-attachments/assets/4364c02f-8506-41c5-bf8a-7c6394ba95c3" />
 
 ### 🔎 Explanation
 - Opens testbench file using Nano editor
@@ -136,6 +138,7 @@ nano tb_vsd_timer_ip.v
 ```bash
 ls
 ```
+<img width="1920" height="167" alt="timer2" src="https://github.com/user-attachments/assets/8e4ba7ba-d03f-4616-870f-590d3cbde54c" />
 
 ### 🔎 Explanation
 Shows available files such as:
@@ -161,6 +164,7 @@ rm -f sim final_vsd_timer.vcd
 ```bash
 iverilog -g2012 -Wall -o sim final_vsd_timer.v tb_vsd_timer_ip.v
 ```
+<img width="1913" height="346" alt="timer3" src="https://github.com/user-attachments/assets/cd8bee9c-da75-45d5-b325-94ba7fb5e49c" />
 
 ### 🔎 Explanation
 - `iverilog` → Verilog compiler
@@ -175,6 +179,7 @@ iverilog -g2012 -Wall -o sim final_vsd_timer.v tb_vsd_timer_ip.v
 ```bash
 vvp sim
 ```
+<img width="1920" height="899" alt="timer4" src="https://github.com/user-attachments/assets/f538f6cd-1129-430e-8157-2a9764acb4c7" />
 
 ### 🔎 Explanation
 - Runs compiled simulation
@@ -191,6 +196,7 @@ final_vsd_timer.vcd
 ```bash
 gtkwave final_vsd_timer.vcd
 ```
+<img width="1440" height="124" alt="timer5" src="https://github.com/user-attachments/assets/64c43301-8dcf-47a6-b871-a16693b701b3" />
 
 ### 🔎 Explanation
 - Opens waveform viewer
@@ -203,10 +209,13 @@ gtkwave final_vsd_timer.vcd
 ## ✅ One-Shot Mode
 - Timer runs once
 - Stops after completion
+<img width="1920" height="885" alt="timer_dut_output" src="https://github.com/user-attachments/assets/35394d2e-8fde-432e-bb0c-768b01818ffd" />
 
 ## 🔁 Periodic Mode
 - Timer reloads automatically
 - Generates repeated events
+<img width="1920" height="892" alt="timer_waveform1" src="https://github.com/user-attachments/assets/12e1a515-fc7f-424a-84dd-5b316fb8be03" />
+<img width="1920" height="890" alt="timer_waveform2" src="https://github.com/user-attachments/assets/2e11577a-2c47-41b3-a82d-49cff2cf911c" />
 
 
 
@@ -219,6 +228,7 @@ gtkwave final_vsd_timer.vcd
 ```bash
 nano top_timer_fpga.v
 ```
+<img width="1920" height="892" alt="timer_synt2" src="https://github.com/user-attachments/assets/9d84b316-f40b-46e9-9239-6a787d901f24" />
 
 ### 🔎 Explanation
 Allows modification of:
@@ -233,6 +243,7 @@ Allows modification of:
 ```bash
 nano vsd_squadron.pcf
 ```
+<img width="1920" height="886" alt="timer_synt3" src="https://github.com/user-attachments/assets/733371bf-2512-48b3-b87e-f0e0f7327db2" />
 
 ### 🔎 Explanation
 Defines FPGA pin mappings such as:
@@ -251,6 +262,7 @@ read_verilog final_vsd_timer.v top_timer_fpga.v
 synth_ice40 -top top_timer_fpga -json timer.json
 "
 ```
+<img width="1920" height="892" alt="timer_synt1" src="https://github.com/user-attachments/assets/a86a7630-e114-4968-bdb9-b396c3a11c1f" />
 
 ### 🔎 Explanation
 
@@ -302,6 +314,7 @@ timer.asc
 ```bash
 icepack timer.asc timer.bin
 ```
+<img width="1920" height="900" alt="timer_ip_build_success" src="https://github.com/user-attachments/assets/47bbf00c-e5b0-4e8f-8c94-d59549d68169" />
 
 ### 🔎 Explanation
 Converts ASCII configuration file into binary bitstream used for FPGA programming.
@@ -318,6 +331,7 @@ timer.bin
 ```bash
 iceprog timer.bin
 ```
+<img width="1920" height="806" alt="timer_ip_fpga_programming_success" src="https://github.com/user-attachments/assets/c4c72e31-1c71-48b4-95bd-ebfe54b99296" />
 
 ### 🔎 Explanation
 Uploads generated bitstream to FPGA hardware.
