@@ -368,7 +368,7 @@ Uploads generated bitstream to FPGA hardware.
 ```
 Simulation & FPGA Build Completed Successfully
 ```
-
+https://github.com/user-attachments/assets/88b319f2-25c8-4adc-82c7-63ab8006a0d0
 ---
 
 # 👨‍💻 Author
