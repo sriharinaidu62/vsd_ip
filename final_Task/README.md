@@ -362,34 +362,6 @@ Uploads generated bitstream to FPGA hardware.
 
 ---
 
-# ⚡ Complete Flow (Quick Run)
-
-```bash
-cd ~/Desktop/vsd_ip/final_Task/timer_ip/rtl
-
-rm -f sim final_vsd_timer.vcd
-
-iverilog -g2012 -Wall -o sim final_vsd_timer.v tb_vsd_timer_ip.v
-vvp sim
-gtkwave final_vsd_timer.vcd
-
-yosys -p "
-read_verilog final_vsd_timer.v top_timer_fpga.v
-synth_ice40 -top top_timer_fpga -json timer.json
-"
-
-nextpnr-ice40 \
---up5k \
---package sg48 \
---json timer.json \
---pcf vsd_squadron.pcf \
---asc timer.asc
-
-icepack timer.asc timer.bin
-iceprog timer.bin
-```
-
----
 
 # ✅ Status
 
