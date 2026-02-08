@@ -61,6 +61,7 @@ Move into the directory containing:
 Create a dedicated testbench file for GPIO validation.
 
 **`touch tb_gpio.v`**
+<img width="1383" height="124" alt="task3_1" src="https://github.com/user-attachments/assets/5e041881-729b-434e-a830-780723f4579f" />
 
 Open the file and implement:
 - Clock and reset generation
@@ -72,6 +73,7 @@ Open the file and implement:
 **`nano tb_gpio.v`**
 
 Verify all required files are present before simulation.
+<img width="1920" height="731" alt="task3_2" src="https://github.com/user-attachments/assets/214a54f1-e905-4690-ad88-f3ab2941eb50" />
 
 **`ls`**
 
@@ -82,6 +84,7 @@ Verify all required files are present before simulation.
 Remove previous simulation outputs to avoid stale results.
 
 **`rm -f sim multi_gpio.vcd`**
+<img width="1920" height="200" alt="task3_3" src="https://github.com/user-attachments/assets/53abf977-16b8-4ba4-a24a-14af6cb9152e" />
 
 ---
 
@@ -113,6 +116,7 @@ During simulation, the testbench performs:
 - VCD waveform dumping
 
 Expected console output:
+<img width="1920" height="271" alt="task3_4" src="https://github.com/user-attachments/assets/e279e66e-ee29-4f5b-a418-dbf12f0b8abc" />
 
 
 Successful output confirms correct:
@@ -133,6 +137,7 @@ This allows verification of:
 - Register timing
 - GPIO direction control
 - Output and readback signals
+<img width="1920" height="889" alt="task3_6" src="https://github.com/user-attachments/assets/577a1bdf-8b33-4dba-86e7-f6c96ed1d0e9" />
 
 ---
 
@@ -145,6 +150,7 @@ This allows verification of:
 
 This confirms the GPIO Control IP is **SoC-ready** and suitable for optional FPGA
 deployment.
+<img width="1914" height="886" alt="task3_command_flow" src="https://github.com/user-attachments/assets/fcc173f2-dd02-41ba-bb8f-a74aee752b26" />
 
 ---
 
