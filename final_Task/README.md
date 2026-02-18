@@ -179,7 +179,8 @@ iverilog -g2012 -Wall -o sim final_vsd_timer.v tb_vsd_timer_ip.v
 ```bash
 vvp sim
 ```
-<img width="1920" height="899" alt="timer4" src="https://github.com/user-attachments/assets/f538f6cd-1129-430e-8157-2a9764acb4c7" />
+<img width="1920" height="275" alt="3" src="https://github.com/user-attachments/assets/01c87f08-f5f9-40ea-8d02-c26d33fcbbab" />
+
 
 ### 🔎 Explanation
 - Runs compiled simulation
