@@ -1,98 +1,262 @@
+
+// ============================================================
+// Minimal SoC Timer IP - Fully Spec Compliant
+// Supports:
+// - One-shot mode
+// - Periodic mode
+// - Prescaler
+// - Sticky timeout flag
+// - Write-1-to-clear status
+// - Memory mapped registers
+// ============================================================
+
 module final_vsd_timer (
-    input            clk,
-    input            resetn,
+    input  wire        clk,
+    input  wire        resetn,
 
-    // Bus interface
-    input            sel,
-    input            we,
-    input  [31:0]    addr,
-    input  [31:0]    wdata,
-    output reg [31:0] rdata,
+    // Memory mapped interface
+    input  wire        sel,
+    input  wire        we,
+    input  wire [3:0]  addr,
+    input  wire [31:0] wdata,
+    output reg  [31:0] rdata,
 
-    // Output
-    output reg       timeout
+    // Interrupt / timeout output
+    output wire        timeout_irq
 );
 
-    // ------------------------------------------------------------
-    // Register map (offsets)
-    // ------------------------------------------------------------
-    localparam REG_CTRL  = 32'h00;  // bit0: en, bit1: mode
-    localparam REG_LOAD  = 32'h04;  // load value
-    localparam REG_VALUE = 32'h08;  // current value (RO)
-    localparam REG_STAT  = 32'h0C;  // bit0: timeout (W1C)
+// ============================================================
+// Register offsets
+// ============================================================
 
-    // ------------------------------------------------------------
-    // Internal registers
-    // ------------------------------------------------------------
-    reg        en;
-    reg        mode;          // 0 = one-shot, 1 = periodic
-    reg [31:0] load_reg;
-    reg [31:0] value_reg;
+localparam CTRL   = 4'h0;
+localparam LOAD   = 4'h4;
+localparam VALUE  = 4'h8;
+localparam STATUS = 4'hC;
 
-    // ------------------------------------------------------------
-    // Prescaler (simple divide-by-1, expandable)
-    // ------------------------------------------------------------
-    wire tick = 1'b1;   // one decrement per clock (clean + reliable)
 
-    // ------------------------------------------------------------
-    // Write logic
-    // ------------------------------------------------------------
-    always @(posedge clk or negedge resetn) begin
-        if (!resetn) begin
-            en       <= 1'b0;
-            mode     <= 1'b0;
-            load_reg <= 32'd0;
-        end else if (sel && we) begin
-            case (addr[3:0])
-                REG_CTRL: begin
-                    en   <= wdata[0];
-                    mode <= wdata[1];
-                end
-                REG_LOAD: begin
-                    load_reg <= wdata;
-                end
-                default: ;
-            endcase
-        end
+// ============================================================
+// Registers
+// ============================================================
+
+reg [31:0] ctrl_reg;
+reg [31:0] load_reg;
+reg [31:0] value_reg;
+reg        timeout_flag;
+
+
+// ============================================================
+// CTRL field extraction
+// ============================================================
+
+wire en        = ctrl_reg[0];
+wire mode      = ctrl_reg[1];
+wire presc_en  = ctrl_reg[2];
+wire [7:0] presc_div = ctrl_reg[15:8];
+
+
+// ============================================================
+// Prescaler logic
+// ============================================================
+
+reg [7:0] presc_cnt;
+
+wire presc_tick = presc_en ?
+                  (presc_cnt == presc_div) :
+                  1'b1;
+
+
+// ============================================================
+// Detect rising edge of enable
+// ============================================================
+
+reg en_d;
+
+wire en_rise = en & ~en_d;
+
+
+// ============================================================
+// Timeout IRQ output
+// ============================================================
+
+assign timeout_irq = timeout_flag;
+
+
+// ============================================================
+// WRITE LOGIC
+// ============================================================
+
+always @(posedge clk or negedge resetn)
+begin
+
+    if(!resetn)
+    begin
+
+        ctrl_reg <= 0;
+        load_reg <= 0;
+        timeout_flag <= 0;
+
     end
 
-    // ------------------------------------------------------------
-    // Timer core + TIMEOUT PULSE (FIXED)
-    // ------------------------------------------------------------
-    always @(posedge clk or negedge resetn) begin
-        if (!resetn) begin
-            value_reg <= 32'd0;
-            timeout   <= 1'b0;
-        end else begin
-            timeout <= 1'b0;   // default: 1-cycle pulse
+    else if(sel && we)
+    begin
 
-            if (en && tick) begin
-                if (value_reg > 0) begin
-                    value_reg <= value_reg - 1'b1;
-                end else begin
-                    timeout <= 1'b1;   // ASSERT for full clock
+        case(addr)
 
-                    if (mode)
-                        value_reg <= load_reg; // periodic reload
-                    else
-                        value_reg <= 32'd0;    // one-shot stop
-                end
-            end
+        CTRL:
+            ctrl_reg <= wdata;
+
+        LOAD:
+            load_reg <= wdata;
+
+        STATUS:
+        begin
+
+            // write 1 to clear
+            if(wdata[0])
+                timeout_flag <= 0;
+
         end
-    end
 
-    // ------------------------------------------------------------
-    // Read logic
-    // ------------------------------------------------------------
-    always @(*) begin
-        case (addr[3:0])
-            REG_CTRL:  rdata = {30'b0, mode, en};
-            REG_LOAD:  rdata = load_reg;
-            REG_VALUE: rdata = value_reg;
-            REG_STAT:  rdata = {31'b0, timeout};
-            default:   rdata = 32'b0;
         endcase
+
     end
+
+end
+
+
+// ============================================================
+// PRESCALER COUNTER
+// ============================================================
+
+always @(posedge clk or negedge resetn)
+begin
+
+    if(!resetn)
+        presc_cnt <= 0;
+
+    else if(en && presc_en)
+    begin
+
+        if(presc_cnt == presc_div)
+            presc_cnt <= 0;
+        else
+            presc_cnt <= presc_cnt + 1;
+
+    end
+
+    else
+        presc_cnt <= 0;
+
+end
+
+
+
+// ============================================================
+// MAIN TIMER LOGIC
+// ============================================================
+
+always @(posedge clk or negedge resetn)
+begin
+
+    if(!resetn)
+    begin
+
+        value_reg <= 0;
+        en_d <= 0;
+
+    end
+
+    else
+    begin
+
+        en_d <= en;
+
+        // load on enable rising edge
+        if(en_rise)
+        begin
+
+            value_reg <= load_reg;
+
+        end
+
+        else if(en && presc_tick)
+        begin
+
+            if(value_reg > 0)
+            begin
+
+                value_reg <= value_reg - 1;
+
+                if(value_reg == 1)
+                begin
+
+                    timeout_flag <= 1;
+
+                end
+
+            end
+
+            else
+            begin
+
+                // timeout reached
+
+                if(mode)
+                begin
+
+                    // periodic reload
+
+                    value_reg <= load_reg;
+
+                end
+
+                else
+                begin
+
+                    // one-shot halt
+
+                    value_reg <= 0;
+
+                end
+
+            end
+
+        end
+
+    end
+
+end
+
+
+
+// ============================================================
+// READ LOGIC
+// ============================================================
+
+always @(*)
+begin
+
+    case(addr)
+
+    CTRL:
+        rdata = ctrl_reg;
+
+    LOAD:
+        rdata = load_reg;
+
+    VALUE:
+        rdata = value_reg;
+
+    STATUS:
+        rdata = {31'd0, timeout_flag};
+
+    default:
+        rdata = 32'd0;
+
+    endcase
+
+end
+
 
 endmodule
-
