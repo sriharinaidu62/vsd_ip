@@ -114,7 +114,8 @@ Open the file to implement:
 - Waveform dumping
 
 **`nano tb_timer_ip.v`**
-<img width="1920" height="889" alt="task4_2" src="https://github.com/user-attachments/assets/69791ff2-d840-4cc3-a5bd-6b9f4d5ff0f5" />
+<img width="1920" height="895" alt="task43" src="https://github.com/user-attachments/assets/eeaf3306-0fa1-49a2-a760-6ff1bc6e59ca" />
+
 
 Verify all required files before simulation.
 
@@ -169,6 +170,7 @@ This confirms:
 - VALUE reloads in periodic mode
 - Disable logic works correctly
 <img width="1920" height="889" alt="task4_5" src="https://github.com/user-attachments/assets/ba9dac36-099a-4065-ae0e-494b1fd942fc" />
+<img width="1920" height="268" alt="task44" src="https://github.com/user-attachments/assets/cc6a5db3-3ea6-4a7f-b6b3-751c49081d4a" />
 
 ---
 
@@ -177,7 +179,7 @@ This confirms:
 Open the waveform dump to visually inspect internal behavior.
 
 **`gtkwave timer_ip.vcd`**
-<img width="1920" height="889" alt="task4_waveform1" src="https://github.com/user-attachments/assets/a0f890ab-b014-4040-a594-6b707c2e7bf8" />
+<img width="1920" height="889" alt="task41" src="https://github.com/user-attachments/assets/a0be7272-fc33-4c7f-88a7-aed33079dcec" />
 
 Waveforms confirm:
 - CTRL decoding
@@ -185,7 +187,7 @@ Waveforms confirm:
 - Timeout assertion timing
 - STATUS clear operation
 - Prescaler influence (if enabled)
-<img width="1920" height="891" alt="task4_waveform2" src="https://github.com/user-attachments/assets/d7be80a8-3e43-4199-be6e-0c71df3235bb" />
+<img width="1920" height="892" alt="task42" src="https://github.com/user-attachments/assets/6f2c1092-b7bc-4774-8b1f-8cfb9365ab22" />
 
 ---
 
