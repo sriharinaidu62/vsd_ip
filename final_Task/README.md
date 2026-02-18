@@ -125,7 +125,8 @@ touch tb_vsd_timer_ip.v
 ```bash
 nano tb_vsd_timer_ip.v
 ```
-<img width="1920" height="895" alt="timer_tb_proof" src="https://github.com/user-attachments/assets/4364c02f-8506-41c5-bf8a-7c6394ba95c3" />
+<img width="1920" height="892" alt="4" src="https://github.com/user-attachments/assets/ea3ec206-c7a7-4384-a988-6e194bdc4adc" />
+
 
 ### 🔎 Explanation
 - Opens testbench file using Nano editor
