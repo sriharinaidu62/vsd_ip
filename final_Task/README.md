@@ -210,14 +210,12 @@ gtkwave final_vsd_timer.vcd
 ## ✅ One-Shot Mode
 - Timer runs once
 - Stops after completion
-<img width="1920" height="885" alt="timer_dut_output" src="https://github.com/user-attachments/assets/35394d2e-8fde-432e-bb0c-768b01818ffd" />
+<img width="1920" height="922" alt="2" src="https://github.com/user-attachments/assets/aa11992f-d421-42fe-888b-56ec08d099c5" />
 
 ## 🔁 Periodic Mode
 - Timer reloads automatically
 - Generates repeated events
-<img width="1920" height="892" alt="timer_waveform1" src="https://github.com/user-attachments/assets/12e1a515-fc7f-424a-84dd-5b316fb8be03" />
-<img width="1920" height="890" alt="timer_waveform2" src="https://github.com/user-attachments/assets/2e11577a-2c47-41b3-a82d-49cff2cf911c" />
-
+<img width="1920" height="922" alt="1" src="https://github.com/user-attachments/assets/74c709d2-ad6b-4740-9def-f31bcfc4f2d2" />
 
 
 # 🧬 FPGA SYNTHESIS FLOW
