@@ -2,143 +2,238 @@
 
 module tb_timer_ip;
 
-    // ------------------------------------------------------------
-    // DUT signals
-    // ------------------------------------------------------------
-    reg         clk;
-    reg         resetn;
-    reg         sel;
-    reg         we;
-    reg [31:0]  addr;
-    reg [31:0]  wdata;
-    wire [31:0] rdata;
-    wire        timeout;
 
-    // ------------------------------------------------------------
-    // DUT instantiation
-    // ------------------------------------------------------------
-    timer_ip dut (
-        .clk     (clk),
-        .resetn  (resetn),
-        .sel     (sel),
-        .we      (we),
-        .addr    (addr),
-        .wdata   (wdata),
-        .rdata   (rdata),
-        .timeout (timeout)
-    );
+// ============================================================
+// Signals
+// ============================================================
 
-    // ------------------------------------------------------------
-    // Clock generation: 100 MHz (10 ns)
-    // ------------------------------------------------------------
-    always #5 clk = ~clk;
+reg clk;
+reg resetn;
 
-    // ------------------------------------------------------------
-    // Bus write task
-    // ------------------------------------------------------------
-    task bus_write(input [31:0] a, input [31:0] d);
+reg sel;
+reg we;
+reg [3:0] addr;
+reg [31:0] wdata;
+
+wire [31:0] rdata;
+wire timeout_irq;
+
+
+// ============================================================
+// Instantiate DUT
+// ============================================================
+
+timer_ip dut (
+
+    .clk(clk),
+    .resetn(resetn),
+
+    .sel(sel),
+    .we(we),
+    .addr(addr),
+    .wdata(wdata),
+    .rdata(rdata),
+
+    .timeout_irq(timeout_irq)
+
+);
+
+
+// ============================================================
+// Clock generation
+// ============================================================
+
+always #5 clk = ~clk;
+
+
+// ============================================================
+// Write Task
+// ============================================================
+
+task write_reg;
+
+input [3:0] address;
+input [31:0] data;
+
+begin
+
+    @(posedge clk);
+
+    sel   = 1;
+    we    = 1;
+    addr  = address;
+    wdata = data;
+
+    @(posedge clk);
+
+    sel = 0;
+    we  = 0;
+
+end
+
+endtask
+
+
+
+// ============================================================
+// Read Task
+// ============================================================
+
+task read_reg;
+
+input [3:0] address;
+
+begin
+
+    @(posedge clk);
+
+    sel  = 1;
+    we   = 0;
+    addr = address;
+
+    @(posedge clk);
+
+    sel = 0;
+
+end
+
+endtask
+
+
+
+
+// ============================================================
+// Test Sequence
+// ============================================================
+
+initial begin
+
+
+    // dumpfile for waveform
+
+    $dumpfile("timer_ip.vcd");
+
+    $dumpvars(0, tb_timer_ip);
+
+
+
+    // initialize
+
+    clk = 0;
+    resetn = 0;
+
+    sel = 0;
+    we = 0;
+    addr = 0;
+    wdata = 0;
+
+
+    // reset
+
+    #20;
+
+    resetn = 1;
+
+
+
+// ============================================================
+// TEST 1 : One-shot mode
+// ============================================================
+
+    $display("TEST 1 : One-shot mode");
+
+
+    write_reg(4'h4, 10);   // LOAD
+
+
+    // CTRL
+    // EN=1 MODE=0 PRESC=0
+
+    write_reg(4'h0, 32'h1);
+
+
+    wait(timeout_irq == 1);
+
+
+    $display("Timeout occurred (One-shot)");
+
+
+
+    read_reg(4'hC);
+
+
+
+    // clear timeout
+
+    write_reg(4'hC, 32'h1);
+
+
+
+    read_reg(4'hC);
+
+
+
+// ============================================================
+// TEST 2 : Periodic mode
+// ============================================================
+
+    $display("TEST 2 : Periodic mode");
+
+
+    write_reg(4'h4, 5);
+
+
+
+    write_reg(4'h0, 32'h3);
+
+
+    repeat(3)
     begin
-        @(posedge clk);
-        sel   <= 1'b1;
-        we    <= 1'b1;
-        addr  <= a;
-        wdata <= d;
-        @(posedge clk);
-        sel   <= 1'b0;
-        we    <= 1'b0;
-        addr  <= 32'd0;
-        wdata <= 32'd0;
-    end
-    endtask
 
-    // ------------------------------------------------------------
-    // Bus read task
-    // ------------------------------------------------------------
-    task bus_read(input [31:0] a);
-    begin
-        @(posedge clk);
-        sel  <= 1'b1;
-        we   <= 1'b0;
-        addr <= a;
-        @(posedge clk);
-        $display("[%0t] READ addr=0x%0h data=0x%0h",
-                  $time, a, rdata);
-        sel  <= 1'b0;
-        addr <= 32'd0;
-    end
-    endtask
+        wait(timeout_irq == 1);
 
-    // ------------------------------------------------------------
-    // Timeout monitor
-    // ------------------------------------------------------------
-    always @(posedge clk) begin
-        if (timeout)
-            $display("[%0t] >>> TIMEOUT ASSERTED <<<", $time);
+        $display("Periodic Timeout");
+
+        write_reg(4'hC, 32'h1);
+
     end
 
-    // ------------------------------------------------------------
-    // VCD DUMP
-    // ------------------------------------------------------------
-    initial begin
-        $dumpfile("timer_ip.vcd");      // waveform file
-        $dumpvars(0, tb_timer_ip);      // dump everything
-    end
 
-    // ------------------------------------------------------------
-    // Test sequence
-    // ------------------------------------------------------------
-    initial begin
-        // Init
-        clk    = 0;
-        resetn = 0;
-        sel    = 0;
-        we     = 0;
-        addr   = 0;
-        wdata  = 0;
 
-        $display("==== TIMER IP TESTBENCH START ====");
 
-        // Apply reset
-        #20;
-        resetn = 1;
-        $display("[%0t] Reset deasserted", $time);
+// ============================================================
+// TEST 3 : Prescaler mode
+// ============================================================
 
-        // --------------------------------------------------------
-        // ONE-SHOT MODE TEST
-        // --------------------------------------------------------
-        $display("\n--- ONE-SHOT MODE TEST ---");
 
-        bus_write(32'h04, 32'd10);     // LOAD = 10
-        bus_write(32'h00, 32'b01);     // CTRL: en=1, mode=0
+    $display("TEST 3 : Prescaler mode");
 
-        repeat (15) begin
-            @(posedge clk);
-            bus_read(32'h08);          // VALUE
-        end
 
-        // --------------------------------------------------------
-        // PERIODIC MODE TEST
-        // --------------------------------------------------------
-        $display("\n--- PERIODIC MODE TEST ---");
+    write_reg(4'h4, 5);
 
-        bus_write(32'h04, 32'd5);      // LOAD = 5
-        bus_write(32'h00, 32'b11);     // CTRL: en=1, mode=1
 
-        repeat (20) begin
-            @(posedge clk);
-            bus_read(32'h08);
-        end
+    // prescale divide by 4
 
-        // --------------------------------------------------------
-        // Disable timer
-        // --------------------------------------------------------
-        $display("\n--- DISABLE TIMER ---");
-        bus_write(32'h00, 32'b00);     // en=0
+    write_reg(4'h0, 32'h00000405);
 
-        repeat (5) @(posedge clk);
 
-        $display("\n==== SIMULATION END ====");
-        $finish;
-    end
+    wait(timeout_irq == 1);
+
+
+    $display("Prescaler Timeout");
+
+
+
+
+#100;
+
+$display("Simulation Finished");
+
+
+$finish;
+
+
+end
+
 
 endmodule
